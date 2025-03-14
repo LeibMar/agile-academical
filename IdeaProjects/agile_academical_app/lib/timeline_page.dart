@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'add_client.dart';
+import 'cadastro_etapa.dart';
 
 class TimeLinePage extends StatelessWidget {
   final String idUsuario;
@@ -60,6 +61,7 @@ class _TimelineState extends State<Timeline> {
 
     return Column(
       children: [
+
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: TextField(
@@ -71,6 +73,18 @@ class _TimelineState extends State<Timeline> {
                 onPressed: _sendPost,
               ),
             ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CadastroEtapa(idUsuario: widget.idUsuario,)),
+              );
+            },
+            child: Text("Lista de Etapas do Projeto"),
           ),
         ),
         Expanded(
