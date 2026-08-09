@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'timeline_page.dart';
 
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -45,6 +46,11 @@ class _LoginPageState extends State<LoginPage> {
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
+            // Adiciona logomarca no topo
+            Image.asset(
+              'assets/images/logo1.png',
+              height: 350,
+            ),
             TextField(
               controller: _usernameController,
               decoration: InputDecoration(labelText: 'Nome de Usuário'),
