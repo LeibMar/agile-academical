@@ -5,12 +5,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'add_client.dart';
 import 'timeline_page.dart';
 import 'login.dart';
-
+import 'common/widgets/menu_lateral_drawer.dart';
 
 import 'package:get/get.dart';
 
 
 class UserListPage extends StatelessWidget {
+  final String idUsuario;
+  UserListPage({required this.idUsuario});
+
   @override
   Widget build(BuildContext context) {
     final currentWidth = MediaQuery.of(context).size.width;
@@ -24,8 +27,9 @@ class UserListPage extends StatelessWidget {
           ),
 
         ),
+       drawer: CustomDrawer(currentUserId: idUsuario),
         body: UserList(),
-        drawer: NavAddUser()
+
 
     );
   }
