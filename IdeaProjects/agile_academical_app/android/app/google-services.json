@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1006142413743",
+    "project_id": "app-marcosbarreiros",
+    "storage_bucket": "app-marcosbarreiros.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1006142413743:android:fefbb81dd1f1cdebe3ad5a",
+        "android_client_info": {
+          "package_name": "com.example.eyelogbookcatalog"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEzTW5bTXTO8VcxchtDXcZUUjdr5nVN9o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
