@@ -8,6 +8,8 @@ import '../../data/repositories/auth_repository_impl.dart';
 import '../../data/datasources/task_firestore_datasource.dart';
 import '../../data/repositories/task_repository_impl.dart';
 import '../../domain/repositories/task_repository.dart';
+import '../../domain/usecases/tasks/create_task.dart';
+import '../../domain/usecases/tasks/get_task.dart';
 import '../../data/repositories/project_repository_impl.dart';
 import '../../data/repositories/stage_repository_impl.dart';
 import '../../data/repositories/user_repository_impl.dart';
@@ -45,6 +47,8 @@ class AppBinding extends Bindings {
           () => TaskFirestoreDataSource(),
       fenix: true,
     );
+
+
 
     Get.lazyPut<AuthRepository>(
     () => AuthRepositoryImpl(
@@ -85,6 +89,17 @@ class AppBinding extends Bindings {
     Get.lazyPut<TaskRepository>(
           () => TaskRepositoryImpl(
         dataSource: Get.find<TaskFirestoreDataSource>(),
+      ),
+      fenix: true,
+    );
+    Get.lazyPut<GetTask>(
+          () => GetTask(Get.find<TaskRepository>()),
+      fenix: true,
+    );
+
+    Get.lazyPut<CreateTask>(
+          () => CreateTask(
+        taskRepository: Get.find<TaskRepository>(),
       ),
       fenix: true,
     );
