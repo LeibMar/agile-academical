@@ -12,6 +12,7 @@ import '../../domain/usecases/tasks/create_task.dart';
 import '../../domain/usecases/tasks/get_task.dart';
 import '../../domain/usecases/tasks/get_tasks_for_project.dart';
 import '../../domain/usecases/tasks/update_task.dart';
+import '../../domain/usecases/tasks/delete_task.dart';
 import '../../data/repositories/project_repository_impl.dart';
 import '../../data/repositories/stage_repository_impl.dart';
 import '../../data/repositories/user_repository_impl.dart';
@@ -110,6 +111,11 @@ class AppBinding extends Bindings {
           () => CreateTask(
         taskRepository: Get.find<TaskRepository>(),
       ),
+      fenix: true,
+    );
+
+    Get.lazyPut<DeleteTask>(
+          () => DeleteTask(Get.find<TaskRepository>()),
       fenix: true,
     );
 
