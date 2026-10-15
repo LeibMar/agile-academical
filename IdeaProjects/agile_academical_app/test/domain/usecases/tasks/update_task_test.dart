@@ -6,59 +6,97 @@ import 'package:agile_academical_app/domain/repositories/task_repository.dart';
 import 'package:agile_academical_app/domain/usecases/tasks/update_task.dart';
 
 class FakeTaskRepository implements TaskRepository {
-Task? updatedTask;
+  Task? currentTask;
+  Task? updatedTask;
 
-@override
-Future<void> updateTask(Task task) async {
-updatedTask = task;
-}
+  @override
+  Future<Task?> getTask(String projectId, String taskId) async {
+    if (currentTask?.projectId == projectId &&
+        currentTask?.id == taskId) {
+      return currentTask;
+    }
 
-@override
-dynamic noSuchMethod(Invocation invocation) {
-return super.noSuchMethod(invocation);
-}
+    return null;
+  }
+
+  @override
+  Future<void> updateTask(Task task) async {
+    updatedTask = task;
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    return super.noSuchMethod(invocation);
+  }
 }
 
 void main() {
-late FakeTaskRepository repository;
-late UpdateTask updateTask;
+  late FakeTaskRepository repository;
+  late UpdateTask updateTask;
 
-setUp(() {
-repository = FakeTaskRepository();
-updateTask = UpdateTask(repository);
-});
+  setUp(() {
+    repository = FakeTaskRepository();
+    updateTask = UpdateTask(repository);
+  });
 
-test('deve encaminhar a tarefa ao repositório para atualização', () async {
-// Arrange
-//final now = DateTime(2026, 10, 14, 10, 0);
+  test(
+    'deve encaminhar a tarefa ao repositório para atualização',
+        () async {
+      final task = Task(
+        id: 'task-001',
+        projectId: 'project-001',
+        stageId: 'stage-001',
+        title: 'Revisar documentação',
+        description: 'Revisar a documentação do projeto',
+        status: TaskStatus.inReview,
+        priority: TaskPriority.high,
+        assignedTo: 'user-001',
+        createdBy: 'user-002',
+        startDate: null,
+        dueDate: null,
+        completedAt: null,
+        createdAt: DateTime(2026, 10, 10),
+        updatedAt: DateTime(2026, 10, 14),
+      );
 
-final task = Task(
-id: 'task-001',
-projectId: 'project-001',
-stageId: 'stage-001',
-title: 'Revisar documentação',
-description: 'Revisar a documentação do projeto',
-status: TaskStatus.inReview,
-priority: TaskPriority.high,
-assignedTo: 'user-001',
-createdBy: 'user-002',
-startDate: null,
-dueDate: null,
-completedAt: null,
-createdAt: DateTime(2026, 10, 10),
-updatedAt: DateTime(2026, 10, 14),
-);
+      // Simula uma tarefa que já existe no repositório.
+      repository.currentTask = task;
 
-// Act
-await updateTask(task);
+      // Act
+      await updateTask(task);
 
-// Assert
-expect(repository.updatedTask, isNotNull);
-expect(repository.updatedTask!.id, task.id);
-expect(repository.updatedTask!.projectId, task.projectId);
-expect(repository.updatedTask!.title, task.title);
-expect(repository.updatedTask!.status, TaskStatus.inReview);
-expect(repository.updatedTask!.priority, TaskPriority.high);
-expect(repository.updatedTask, same(task));
-});
+      // Assert
+      expect(repository.updatedTask, isNotNull);
+      expect(repository.updatedTask!.id, task.id);
+      expect(repository.updatedTask!.projectId, task.projectId);
+      expect(repository.updatedTask!.title, task.title);
+      expect(repository.updatedTask!.status, TaskStatus.inReview);
+      expect(repository.updatedTask!.priority, TaskPriority.high);
+      expect(repository.updatedTask!.createdBy, task.createdBy);
+      expect(repository.updatedTask!.createdAt, task.createdAt);
+    },
+  );
+
+  test(
+    'deve lançar StateError quando a tarefa não existir',
+        () async {
+      final task = Task(
+        id: 'task-inexistente',
+        projectId: 'project-001',
+        title: 'Tarefa inexistente',
+        status: TaskStatus.todo,
+        priority: TaskPriority.medium,
+        createdBy: 'user-001',
+        createdAt: DateTime(2026, 10, 10),
+        updatedAt: DateTime(2026, 10, 14),
+      );
+
+      expect(
+            () => updateTask(task),
+        throwsA(isA<StateError>()),
+      );
+
+      expect(repository.updatedTask, isNull);
+    },
+  );
 }
