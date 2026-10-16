@@ -264,7 +264,63 @@ throwsArgumentError,
 );
 });
 
+test('deve rejeitar entrega anterior ao início', () {
+  final current = makeTask(id: 'task-1');
 
+  final updated = makeTask(
+    id: 'task-1',
+    startDate: DateTime(2026, 10, 20),
+    dueDate: DateTime(2026, 10, 19),
+  );
 
+  expect(
+        () => TaskRules.prepareForUpdate(
+      current,
+      updated,
+      now: now,
+    ),
+    throwsArgumentError,
+  );
+});
+test('deve remover espaços do título ao atualizar', () {
+  final current = makeTask(id: 'task-1');
+
+  final updated = makeTask(
+    id: 'task-1',
+    title: '  Título atualizado  ',
+  );
+
+  final result = TaskRules.prepareForUpdate(
+    current,
+    updated,
+    now: now,
+  );
+
+  expect(result.title, 'Título atualizado');
+});
+
+test('deve preservar completedAt quando a atualização não informar a data', () {
+  final completionDate = DateTime(2026, 10, 10);
+
+  final current = makeTask(
+    id: 'task-1',
+    status: TaskStatus.done,
+    completedAt: completionDate,
+  );
+
+  final updated = makeTask(
+    id: 'task-1',
+    status: TaskStatus.done,
+    completedAt: null,
+  );
+
+  final result = TaskRules.prepareForUpdate(
+    current,
+    updated,
+    now: now,
+  );
+
+  expect(result.completedAt, completionDate);
+});
 });
 }
