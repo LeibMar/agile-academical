@@ -26,18 +26,31 @@ class FakeTaskRepository implements TaskRepository {
   Future<void> deleteTask(String projectId, String taskId) async {}
 }
 
-Task makeTask({String title = '  Revisar referencial teórico  '}) {
+Task makeTask({
+  String title = '  Revisar referencial teórico  ',
+  String projectId = 'project-1',
+  String createdBy = 'user-1',
+  String? stageId,
+  String? assignedTo,
+  DateTime? startDate,
+  DateTime? dueDate,
+}) {
   final now = DateTime(2026, 10, 13, 10);
 
   return Task(
     id: '',
-    projectId: 'project-1',
+    projectId: projectId,
+    stageId: stageId,
     title: title,
     status: TaskStatus.todo,
     priority: TaskPriority.medium,
-    createdBy: 'user-1',
+    assignedTo: assignedTo,
+    createdBy: createdBy,
+    startDate: startDate,
+    dueDate: dueDate,
     createdAt: now,
     updatedAt: now,
+
   );
 }
 
@@ -76,5 +89,74 @@ void main() {
     );
 
     expect(repository.receivedTask, isNull);
+  });
+  test('não persiste tarefa sem projeto', () async {
+    final task = makeTask(projectId: '');
+
+    await expectLater(
+      createTask(task),
+      throwsArgumentError,
+    );
+
+    expect(repository.receivedTask, isNull);
+  });
+  test('não persiste tarefa sem criador', () async {
+    final task = makeTask(createdBy: '');
+
+    await expectLater(
+      createTask(task),
+      throwsArgumentError,
+    );
+
+    expect(repository.receivedTask, isNull);
+  });
+  test('não persiste tarefa com ID de etapa vazio', () async {
+    final task = makeTask(stageId: '');
+
+    await expectLater(
+      createTask(task),
+      throwsArgumentError,
+    );
+
+    expect(repository.receivedTask, isNull);
+  });
+  test('não persiste tarefa com responsável vazio', () async {
+    final task = makeTask(assignedTo: '');
+
+    await expectLater(
+      createTask(task),
+      throwsArgumentError,
+    );
+
+    expect(repository.receivedTask, isNull);
+  });
+
+  test('não persiste tarefa com vencimento anterior ao início', () async {
+    final task = makeTask(
+      startDate: DateTime(2026, 10, 14),
+      dueDate: DateTime(2026, 10, 13),
+    );
+
+    await expectLater(
+      createTask(task),
+      throwsArgumentError,
+    );
+
+    expect(repository.receivedTask, isNull);
+  });
+  test('persiste tarefa com vencimento igual ao início', () async {
+    final data = DateTime(2026, 10, 14);
+
+    final task = makeTask(
+      startDate: data,
+      dueDate: data,
+    );
+
+    final id = await createTask(task);
+
+    expect(id, 'task-generated-id');
+    expect(repository.receivedTask, isNotNull);
+    expect(repository.receivedTask!.startDate, data);
+    expect(repository.receivedTask!.dueDate, data);
   });
 }
