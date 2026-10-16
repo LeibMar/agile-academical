@@ -88,6 +88,55 @@ now: now,
 throwsArgumentError,
 );
 });
+test('deve rejeitar tarefa sem criador', () {
+  expect(
+        () => TaskRules.prepareForCreation(
+      makeTask(createdBy: ''),
+      now: now,
+    ),
+    throwsArgumentError,
+  );
+});
+
+test('deve rejeitar ID de etapa vazio quando informado', () {
+  expect(
+        () => TaskRules.prepareForCreation(
+      Task(
+        id: '',
+        projectId: 'project-1',
+        stageId: '',
+        title: 'Implementar funcionalidade',
+        status: TaskStatus.todo,
+        priority: TaskPriority.medium,
+        createdBy: 'user-1',
+        createdAt: now,
+        updatedAt: now,
+      ),
+      now: now,
+    ),
+    throwsArgumentError,
+  );
+});
+
+test('deve rejeitar responsável vazio quando informado', () {
+  expect(
+        () => TaskRules.prepareForCreation(
+      Task(
+        id: '',
+        projectId: 'project-1',
+        title: 'Implementar funcionalidade',
+        status: TaskStatus.todo,
+        priority: TaskPriority.medium,
+        assignedTo: '',
+        createdBy: 'user-1',
+        createdAt: now,
+        updatedAt: now,
+      ),
+      now: now,
+    ),
+    throwsArgumentError,
+  );
+});
 });
 
 group('TaskRules.prepareForUpdate', () {
@@ -215,55 +264,7 @@ throwsArgumentError,
 );
 });
 
-test('deve rejeitar tarefa sem criador', () {
-  expect(
-        () => TaskRules.prepareForCreation(
-      makeTask(createdBy: ''),
-      now: now,
-    ),
-    throwsArgumentError,
-  );
-});
 
-test('deve rejeitar ID de etapa vazio quando informado', () {
-  expect(
-        () => TaskRules.prepareForCreation(
-      Task(
-        id: '',
-        projectId: 'project-1',
-        stageId: '',
-        title: 'Implementar funcionalidade',
-        status: TaskStatus.todo,
-        priority: TaskPriority.medium,
-        createdBy: 'user-1',
-        createdAt: now,
-        updatedAt: now,
-      ),
-      now: now,
-    ),
-    throwsArgumentError,
-  );
-});
-
-test('deve rejeitar responsável vazio quando informado', () {
-  expect(
-        () => TaskRules.prepareForCreation(
-      Task(
-        id: '',
-        projectId: 'project-1',
-        title: 'Implementar funcionalidade',
-        status: TaskStatus.todo,
-        priority: TaskPriority.medium,
-        assignedTo: '',
-        createdBy: 'user-1',
-        createdAt: now,
-        updatedAt: now,
-      ),
-      now: now,
-    ),
-    throwsArgumentError,
-  );
-});
 
 });
 }
