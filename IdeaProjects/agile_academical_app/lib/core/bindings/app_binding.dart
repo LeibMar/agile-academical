@@ -16,6 +16,11 @@ import '../../domain/usecases/tasks/delete_task.dart';
 import '../../data/datasources/post_firestore_datasource.dart';
 import '../../data/repositories/post_repository_impl.dart';
 import '../../domain/repositories/post_repository.dart';
+import '../../domain/usecases/posts/create_post.dart';
+import '../../domain/usecases/posts/get_post.dart';
+import '../../domain/usecases/posts/get_posts_for_project.dart';
+import '../../domain/usecases/posts/update_post.dart';
+import '../../domain/usecases/posts/delete_post.dart';
 import '../../data/repositories/project_repository_impl.dart';
 import '../../data/repositories/stage_repository_impl.dart';
 import '../../data/repositories/user_repository_impl.dart';
@@ -131,6 +136,35 @@ class AppBinding extends Bindings {
           () => DeleteTask(Get.find<TaskRepository>()),
       fenix: true,
     );
+
+
+    Get.lazyPut<CreatePost>(
+          () => CreatePost(
+        postRepository: Get.find<PostRepository>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<GetPost>(
+          () => GetPost(Get.find<PostRepository>()),
+      fenix: true,
+    );
+
+    Get.lazyPut<GetPostsForProject>(
+          () => GetPostsForProject(Get.find<PostRepository>()),
+      fenix: true,
+    );
+
+    Get.lazyPut<UpdatePost>(
+          () => UpdatePost(Get.find<PostRepository>()),
+      fenix: true,
+    );
+
+    Get.lazyPut<DeletePost>(
+          () => DeletePost(Get.find<PostRepository>()),
+      fenix: true,
+    );
+
 
   }
 }
