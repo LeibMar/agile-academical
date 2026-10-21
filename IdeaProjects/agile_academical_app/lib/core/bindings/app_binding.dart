@@ -21,6 +21,14 @@ import '../../domain/usecases/posts/get_post.dart';
 import '../../domain/usecases/posts/get_posts_for_project.dart';
 import '../../domain/usecases/posts/update_post.dart';
 import '../../domain/usecases/posts/delete_post.dart';
+import '../../data/datasources/comment_firestore_datasource.dart';
+import '../../data/repositories/comment_repository_impl.dart';
+import '../../domain/repositories/comment_repository.dart';
+import '../../domain/usecases/comments/create_comment.dart';
+import '../../domain/usecases/comments/get_comment.dart';
+import '../../domain/usecases/comments/get_comments_for_post.dart';
+import '../../domain/usecases/comments/update_comment.dart';
+import '../../domain/usecases/comments/delete_comment.dart';
 import '../../data/repositories/project_repository_impl.dart';
 import '../../data/repositories/stage_repository_impl.dart';
 import '../../data/repositories/user_repository_impl.dart';
@@ -62,7 +70,10 @@ class AppBinding extends Bindings {
           () => PostFirestoreDataSource(),
       fenix: true,
     );
-
+    Get.lazyPut<CommentFirestoreDataSource>(
+          () => CommentFirestoreDataSource(),
+      fenix: true,
+    );
 
     Get.lazyPut<AuthRepository>(
     () => AuthRepositoryImpl(
@@ -113,6 +124,13 @@ class AppBinding extends Bindings {
       ),
       fenix: true,
     );
+    Get.lazyPut<CommentRepository>(
+          () => CommentRepositoryImpl(
+        dataSource: Get.find<CommentFirestoreDataSource>(),
+      ),
+      fenix: true,
+    );
+
     Get.lazyPut<GetTask>(
           () => GetTask(Get.find<TaskRepository>()),
       fenix: true,
@@ -162,6 +180,41 @@ class AppBinding extends Bindings {
 
     Get.lazyPut<DeletePost>(
           () => DeletePost(Get.find<PostRepository>()),
+      fenix: true,
+    );
+
+    Get.lazyPut<CreateComment>(
+          () => CreateComment(
+        Get.find<CommentRepository>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<GetComment>(
+          () => GetComment(
+        Get.find<CommentRepository>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<GetCommentsForPost>(
+          () => GetCommentsForPost(
+        Get.find<CommentRepository>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<UpdateComment>(
+          () => UpdateComment(
+        Get.find<CommentRepository>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<DeleteComment>(
+          () => DeleteComment(
+        Get.find<CommentRepository>(),
+      ),
       fenix: true,
     );
 
