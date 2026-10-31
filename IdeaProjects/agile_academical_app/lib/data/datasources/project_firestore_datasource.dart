@@ -89,17 +89,78 @@ class ProjectFirestoreDataSource {
   Future<void> deleteProject(String projectId) async {
     final projectReference = _projects.doc(projectId);
 
-    final stagesSnapshot =
-    await projectReference.collection('stages').get();
+    // 1. Exclui comentários e publicações.
+    await _deletePostsAndComments(
+      projectReference.collection('posts'),
+    );
 
-    final batch = firestore.batch();
+    // 2. Exclui tarefas.
+    await _deleteCollection(
+      projectReference.collection('tasks'),
+    );
 
-    for (final stage in stagesSnapshot.docs) {
-      batch.delete(stage.reference);
+    // 3. Exclui etapas.
+    await _deleteCollection(
+      projectReference.collection('stages'),
+    );
+
+    // 4. Exclui o documento principal do projeto.
+    await projectReference.delete();
+  }
+
+  static const int _deleteBatchSize = 400;
+
+  /// Exclui todos os documentos de uma coleção em lotes.
+  Future<void> _deleteCollection(
+      Query<Map<String, dynamic>> collection,
+      ) async {
+    while (true) {
+      final snapshot = await collection
+          .limit(_deleteBatchSize)
+          .get();
+
+      if (snapshot.docs.isEmpty) {
+        break;
+      }
+
+      final batch = firestore.batch();
+
+      for (final document in snapshot.docs) {
+        batch.delete(document.reference);
+      }
+
+      await batch.commit();
     }
+  }
 
-    batch.delete(projectReference);
+  /// Exclui os comentários de todas as publicações de um projeto.
+  Future<void> _deletePostsAndComments(
+      CollectionReference<Map<String, dynamic>> posts,
+      ) async {
+    while (true) {
+      final snapshot = await posts
+          .limit(_deleteBatchSize)
+          .get();
 
-    await batch.commit();
+      if (snapshot.docs.isEmpty) {
+        break;
+      }
+
+      // Primeiro exclui os comentários de cada publicação.
+      for (final post in snapshot.docs) {
+        await _deleteCollection(
+          post.reference.collection('comments'),
+        );
+      }
+
+      // Depois exclui as publicações.
+      final batch = firestore.batch();
+
+      for (final post in snapshot.docs) {
+        batch.delete(post.reference);
+      }
+
+      await batch.commit();
+    }
   }
 }
