@@ -1,5 +1,12 @@
 import 'package:get/get.dart';
-
+import '../../domain/usecases/projects/create_project.dart';
+import '../../domain/usecases/projects/get_project.dart';
+import '../../domain/usecases/projects/get_projects_for_user.dart';
+import '../../domain/usecases/projects/update_project.dart';
+import '../../domain/usecases/projects/add_project_member.dart';
+import '../../domain/usecases/projects/remove_project_member.dart';
+import '../../domain/usecases/projects/cancel_project.dart';
+import '../../domain/usecases/projects/delete_project.dart';
 import '../../data/datasources/project_firestore_datasource.dart';
 import '../../data/datasources/stage_firestore_datasource.dart';
 import '../../data/datasources/user_auth_datasource.dart';
@@ -104,7 +111,45 @@ class AppBinding extends Bindings {
     ),
     fenix: true,
     );
+    Get.lazyPut<CreateProject>(
+          () => CreateProject(Get.find<ProjectRepository>()),
+      fenix: true,
+    );
 
+    Get.lazyPut<GetProject>(
+          () => GetProject(Get.find<ProjectRepository>()),
+      fenix: true,
+    );
+
+    Get.lazyPut<GetProjectsForUser>(
+          () => GetProjectsForUser(Get.find<ProjectRepository>()),
+      fenix: true,
+    );
+
+    Get.lazyPut<UpdateProject>(
+          () => UpdateProject(Get.find<ProjectRepository>()),
+      fenix: true,
+    );
+
+    Get.lazyPut<AddProjectMember>(
+          () => AddProjectMember(Get.find<ProjectRepository>()),
+      fenix: true,
+    );
+
+    Get.lazyPut<RemoveProjectMember>(
+          () => RemoveProjectMember(Get.find<ProjectRepository>()),
+      fenix: true,
+    );
+
+    Get.lazyPut<CancelProject>(
+          () => CancelProject(Get.find<ProjectRepository>()),
+      fenix: true,
+    );
+
+    Get.lazyPut<DeleteProject>(
+          () => DeleteProject(Get.find<ProjectRepository>()),
+      fenix: true,
+    );
     Get.lazyPut<StageRepository>(
     () => StageRepositoryImpl(
     dataSource: Get.find<StageFirestoreDataSource>(),
