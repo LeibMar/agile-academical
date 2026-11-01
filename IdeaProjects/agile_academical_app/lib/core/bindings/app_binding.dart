@@ -36,6 +36,15 @@ import '../../domain/usecases/comments/get_comment.dart';
 import '../../domain/usecases/comments/get_comments_for_post.dart';
 import '../../domain/usecases/comments/update_comment.dart';
 import '../../domain/usecases/comments/delete_comment.dart';
+import '../../data/datasources/project_file_firestore_datasource.dart';
+import '../../data/repositories/project_file_repository_impl.dart';
+import '../../domain/repositories/project_file_repository.dart';
+import '../../domain/usecases/files/create_project_file.dart';
+import '../../domain/usecases/files/get_project_file.dart';
+import '../../domain/usecases/files/get_project_files.dart';
+import '../../domain/usecases/files/get_project_files_for_related_entity.dart';
+import '../../domain/usecases/files/update_project_file.dart';
+import '../../domain/usecases/files/delete_project_file.dart';
 import '../../data/repositories/project_repository_impl.dart';
 import '../../data/repositories/stage_repository_impl.dart';
 import '../../data/repositories/user_repository_impl.dart';
@@ -82,6 +91,11 @@ class AppBinding extends Bindings {
       fenix: true,
     );
 
+    Get.lazyPut<ProjectFileFirestoreDataSource>(
+          () => ProjectFileFirestoreDataSource(),
+      fenix: true,
+    );
+
     Get.lazyPut<AuthRepository>(
     () => AuthRepositoryImpl(
     dataSource: Get.find<UserAuthDataSource>(),
@@ -110,6 +124,13 @@ class AppBinding extends Bindings {
     dataSource: Get.find<ProjectFirestoreDataSource>(),
     ),
     fenix: true,
+    );
+
+    Get.lazyPut<ProjectFileRepository>(
+          () => ProjectFileRepositoryImpl(
+        dataSource: Get.find<ProjectFileFirestoreDataSource>(),
+      ),
+      fenix: true,
     );
     Get.lazyPut<CreateProject>(
           () => CreateProject(Get.find<ProjectRepository>()),
@@ -259,6 +280,48 @@ class AppBinding extends Bindings {
     Get.lazyPut<DeleteComment>(
           () => DeleteComment(
         Get.find<CommentRepository>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<CreateProjectFile>(
+          () => CreateProjectFile(
+        projectFileRepository: Get.find<ProjectFileRepository>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<GetProjectFile>(
+          () => GetProjectFile(
+        projectFileRepository: Get.find<ProjectFileRepository>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<GetProjectFiles>(
+          () => GetProjectFiles(
+        projectFileRepository: Get.find<ProjectFileRepository>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<GetProjectFilesForRelatedEntity>(
+          () => GetProjectFilesForRelatedEntity(
+        projectFileRepository: Get.find<ProjectFileRepository>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<UpdateProjectFile>(
+          () => UpdateProjectFile(
+        projectFileRepository: Get.find<ProjectFileRepository>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<DeleteProjectFile>(
+          () => DeleteProjectFile(
+        projectFileRepository: Get.find<ProjectFileRepository>(),
       ),
       fenix: true,
     );
