@@ -13,6 +13,7 @@ import '../../data/datasources/user_auth_datasource.dart';
 import '../../data/datasources/user_firestore_datasource.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../data/datasources/task_firestore_datasource.dart';
+import '../../data/datasources/notification_firestore_datasource.dart';
 import '../../data/repositories/task_repository_impl.dart';
 import '../../domain/repositories/task_repository.dart';
 import '../../domain/usecases/tasks/create_task.dart';
@@ -45,6 +46,14 @@ import '../../domain/usecases/files/get_project_files.dart';
 import '../../domain/usecases/files/get_project_files_for_related_entity.dart';
 import '../../domain/usecases/files/update_project_file.dart';
 import '../../domain/usecases/files/delete_project_file.dart';
+import '../../domain/usecases/notifications/create_notification.dart';
+import '../../domain/usecases/notifications/get_notification.dart';
+import '../../domain/usecases/notifications/get_notifications_for_user.dart';
+import '../../domain/usecases/notifications/get_unread_notifications_for_user.dart';
+import '../../domain/usecases/notifications/mark_notification_as_read.dart';
+import '../../domain/usecases/notifications/delete_notification.dart';
+import '../../data/repositories/notification_repository_impl.dart';
+import '../../domain/repositories/notification_repository.dart';
 import '../../data/repositories/project_repository_impl.dart';
 import '../../data/repositories/stage_repository_impl.dart';
 import '../../data/repositories/user_repository_impl.dart';
@@ -93,6 +102,11 @@ class AppBinding extends Bindings {
 
     Get.lazyPut<ProjectFileFirestoreDataSource>(
           () => ProjectFileFirestoreDataSource(),
+      fenix: true,
+    );
+
+    Get.lazyPut<NotificationFirestoreDataSource>(
+          () => NotificationFirestoreDataSource(),
       fenix: true,
     );
 
@@ -196,7 +210,12 @@ class AppBinding extends Bindings {
       ),
       fenix: true,
     );
-
+    Get.lazyPut<NotificationRepository>(
+          () => NotificationRepositoryImpl(
+        dataSource: Get.find<NotificationFirestoreDataSource>(),
+      ),
+      fenix: true,
+    );
     Get.lazyPut<GetTask>(
           () => GetTask(Get.find<TaskRepository>()),
       fenix: true,
@@ -322,6 +341,48 @@ class AppBinding extends Bindings {
     Get.lazyPut<DeleteProjectFile>(
           () => DeleteProjectFile(
         projectFileRepository: Get.find<ProjectFileRepository>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<CreateNotification>(
+          () => CreateNotification(
+        notificationRepository: Get.find<NotificationRepository>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<GetNotification>(
+          () => GetNotification(
+        notificationRepository: Get.find<NotificationRepository>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<GetNotificationsForUser>(
+          () => GetNotificationsForUser(
+        notificationRepository: Get.find<NotificationRepository>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<GetUnreadNotificationsForUser>(
+          () => GetUnreadNotificationsForUser(
+        notificationRepository: Get.find<NotificationRepository>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<MarkNotificationAsRead>(
+          () => MarkNotificationAsRead(
+        notificationRepository: Get.find<NotificationRepository>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<DeleteNotification>(
+          () => DeleteNotification(
+        notificationRepository: Get.find<NotificationRepository>(),
       ),
       fenix: true,
     );
